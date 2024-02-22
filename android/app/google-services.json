@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1003962949356",
+    "project_id": "relmorg",
+    "storage_bucket": "relmorg.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1003962949356:android:55b372cb682a021e74cfc9",
+        "android_client_info": {
+          "package_name": "com.example.relm"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlDHxB5ZSHOaDMeQGAFG64NNizeDzsgl0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
