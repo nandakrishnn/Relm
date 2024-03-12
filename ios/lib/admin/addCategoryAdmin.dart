@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'package:relm/user%20home%20screens/database/db.dart';
-import 'package:relm/user%20home%20screens/database/functions.dart';
+
+
 
 import 'categoryadmin.dart';
 
@@ -144,15 +144,15 @@ class _AddCategoryAdminState extends State<AddCategoryAdmin> {
   Future<void> onButtonClicked() async {
     final cname = categoryname.text.trim();
 
-    if (cname.isNotEmpty) {
-      final data = Datamodelcat(catimage: image1?.path ?? '', catname: cname);
-       await addCategoryAdmin(data);
+    // if (cname.isNotEmpty) {
+    //   final data = Datamodelcat(catimage: image1?.path ?? '', catname: cname);
+    //    await addCategoryAdmin(data);
       
        
 
-      categoryname.clear();
+    //   categoryname.clear();
       
-      image1 = null; 
-    }
+    //   image1 = null; 
+    // }
   }
 }

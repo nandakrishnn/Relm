@@ -50,135 +50,130 @@ class _MusicCategoryAdminState extends State<MusicCategoryAdmin> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          // Handle tap event if needed
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => categoryMusicList(category: ds['MusicCategoryName'],)));
                         },
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => categoryMusicList(category: ds['MusicCategoryName'],)));
-                          },
-                          child: Card(
-                            elevation: 10,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: Container(
-                                height: 200,
-                                width: 300,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  image: DecorationImage(
-                                    image: image.image,
-                                    fit: BoxFit.cover,
-                                  ),
+                        child: Card(
+                          elevation: 10,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Container(
+                              height: 200,
+                              width: 300,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                image: DecorationImage(
+                                  image: image.image,
+                                  fit: BoxFit.cover,
                                 ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 16,
-                                        vertical: 8,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          begin: Alignment.bottomCenter,
-                                          end: Alignment.topCenter,
-                                          colors: [
-                                            Colors.black.withOpacity(0.8),
-                                            Colors.transparent,
-                                          ],
-                                        ),
-                                      ),
-                                      child: Align(
-                                        alignment: Alignment.bottomLeft,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 5),
-                                              child: Text(
-                                                '${ds["MusicCategoryName"]}',
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize: 20,
-                                                  color: Colors.white,
-                                                  shadows: [
-                                                    Shadow(
-                                                      color: Colors.black,
-                                                      offset: Offset(0, -1),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            IconButton(
-                                              onPressed: () async {
-                                                showModalBottomSheet(
-                                                    context: context,
-                                                    builder:
-                                                        (BuildContext context) {
-                                                      return Column(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        children: [
-                                                          ListTile(
-                                                            leading: IconButton(
-                                                                onPressed: () {
-                                                                  updatedmuiccatname
-                                                                          .text =
-                                                                      ds["MusicCategoryName"];
-                                                                  // Navigator.push(context, MaterialPageRoute(builder: (context)=>editMusicCat(orgid)));
-                                                                  //  editCatgeorydetail(ds["Id"]);
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                          builder: (context) => EditCatMusic(
-                                                                                ds: ds,
-                                                                              )));
-                                                                              //  Navigator.pop(context);
-                                                                },
-                                                                icon: Icon(Icons
-                                                                    .edit)),
-                                                            title: Text('Edit'),
-                                                          ),
-                                                          ListTile(
-                                                            leading: IconButton(
-                                                                onPressed:
-                                                                    () async {
-                                                                  await fireDatabase()
-                                                                      .deleteCategory(
-                                                                          ds["Id"]);
-                                                                          Future.delayed(Duration(milliseconds:500 ));
-                                                                          setState(() {
-                                                                            
-                                                                          });
-                                                                           Navigator.pop(context);
-                                                                },
-                                                                
-                                                                icon: Icon(Icons
-                                                                    .delete)),
-                                                            title:
-                                                                Text('Delete'),
-                                                          )
-                                                        ],
-                                                      );
-                                                    });
-
-                                              },
-                                              icon: Icon(
-                                                  Icons.more_vert_outlined),
-                                              color: Colors.white,
-                                            )
-                                          ],
-                                        ),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 8,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.bottomCenter,
+                                        end: Alignment.topCenter,
+                                        colors: [
+                                          Colors.black.withOpacity(0.8),
+                                          Colors.transparent,
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
+                                    child: Align(
+                                      alignment: Alignment.bottomLeft,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 5),
+                                            child: Text(
+                                              '${ds["MusicCategoryName"]}',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 20,
+                                                color: Colors.white,
+                                                shadows: [
+                                                  Shadow(
+                                                    color: Colors.black,
+                                                    offset: Offset(0, -1),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          IconButton(
+                                            onPressed: () async {
+                                              showModalBottomSheet(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        ListTile(
+                                                          leading: IconButton(
+                                                              onPressed: () {
+                                                                updatedmuiccatname
+                                                                        .text =
+                                                                    ds["MusicCategoryName"];
+                                                                // Navigator.push(context, MaterialPageRoute(builder: (context)=>editMusicCat(orgid)));
+                                                                //  editCatgeorydetail(ds["Id"]);
+                                                                Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder: (context) => EditCatMusic(
+                                                                              ds: ds,
+                                                                            )));
+                                                                            //  Navigator.pop(context);
+                                                              },
+                                                              icon: Icon(Icons
+                                                                  .edit)),
+                                                          title: Text('Edit'),
+                                                        ),
+                                                        ListTile(
+                                                          leading: IconButton(
+                                                              onPressed:
+                                                                  () async {
+                                                                await fireDatabase()
+                                                                    .deleteCategory(
+                                                                        ds["Id"]);
+                                                                        Future.delayed(Duration(milliseconds:500 ));
+                                                                        setState(() {
+                                                                          
+                                                                        });
+                                                                         Navigator.pop(context);
+                                                              },
+                                                              
+                                                              icon: Icon(Icons
+                                                                  .delete)),
+                                                          title:
+                                                              Text('Delete'),
+                                                        )
+                                                      ],
+                                                    );
+                                                  });
+                      
+                                            },
+                                            icon: Icon(
+                                                Icons.more_vert_outlined),
+                                            color: Colors.white,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),

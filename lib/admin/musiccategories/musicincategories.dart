@@ -217,7 +217,9 @@ class _categoryMusicListState extends State<categoryMusicList> {
             children: documents.map((ds) => buildMusicItem(ds)).toList(),
           );
         } else {
-          return Container();
+          return Container(
+              child: Center(child: Text('Add new music to display here :)',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),)),
+          );
         }
       },
     );

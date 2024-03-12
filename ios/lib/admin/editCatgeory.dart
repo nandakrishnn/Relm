@@ -10,8 +10,8 @@ import 'package:relm/user%20home%20screens/database/functions.dart';
 
 class EditCategory extends StatefulWidget {
 
-  final Datamodelcat detcat;
-  const EditCategory({super.key, required this.detcat});
+  // final Datamodelcat detcat;
+  const EditCategory({super.key,});
 
   
 
@@ -31,9 +31,9 @@ class _EditCategoryState extends State<EditCategory> {
     // TODO: implement initState
     super.initState();
 
-    catname=TextEditingController(text: widget.detcat.catname);
-    image=File(widget.detcat.catimage);
-    print("ID in initState: ${widget.detcat.id1}");
+    // catname=TextEditingController(text: widget.detcat.catname);
+    // image=File(widget.detcat.catimage);
+    // print("ID in initState: ${widget.detcat.id1}");
   
 
 
@@ -91,8 +91,8 @@ class _EditCategoryState extends State<EditCategory> {
                 )),
                 const SizedBox(height: 12,),
                 ElevatedButton(onPressed: (){
-                  onupdate();
-                  Navigator.pop(context);
+                  // onupdate();
+                  // Navigator.pop(context);
                 }, child: const Text('Update Book'))
               ],
             ),
@@ -114,41 +114,42 @@ class _EditCategoryState extends State<EditCategory> {
 
   
   }
-Future<void> onupdate() async {
-  final ucatname = catname.text.trim();
+// Future<void> onupdate() async {
+//   final ucatname = catname.text.trim();
 
-  final id = widget.detcat.id1;// Access ID from widget
-  print("ID before updating: $id");
+//   final id = widget.detcat.id1;// Access ID from widget
+//   print("ID before updating: $id");
 
-  if (id != null) {
-    final catDB = await Hive.openBox<Datamodelcat>('relmcat');
-    try {
-      final existingData = catDB.get(id);
+//   if (id != null) {
+//     final catDB = await Hive.openBox<Datamodelcat>('relmcat');
+//     try {
+//       final existingData = catDB.get(id);
 
-      if (existingData != null) {
-        final updatedData = Datamodelcat(
-          id1: id,
-          catname: ucatname,
-          catimage: image?.path ?? existingData.catimage, // Use existing image path if new image is null
-        );
-        final success = await editCat(id, updatedData);
-        if (success) {
-          Navigator.pop(context);
-        } else {
-          // Handle error
-          print('Failed to update category');
-        }
-      } else {
-        print('Existing data is null');
-      }
-    } catch (e) {
-      print('Error retrieving data from database: $e');
-    } finally {
-      await catDB.close();
-    }
-  } else {
-    print('ID is null');
-    // Handle null ID case
-  }
-}
+//       if (existingData != null) {
+//         final updatedData = Datamodelcat(
+//           id1: id,
+//           catname: ucatname,
+//           catimage: image?.path ?? existingData.catimage, // Use existing image path if new image is null
+//         );
+//         final success = await editCat(id, updatedData);
+//         if (success) {
+//           Navigator.pop(context);
+//         } else {
+//           // Handle error
+//           print('Failed to update category');
+//         }
+//       } else {
+//         print('Existing data is null');
+//       }
+//     } catch (e) {
+//       print('Error retrieving data from database: $e');
+//     } finally {
+//       await catDB.close();
+//     }
+//   } else {
+//     print('ID is null');
+//     // Handle null ID case
+//   }
+// }
+// }}}
 }

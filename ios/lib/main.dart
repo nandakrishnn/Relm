@@ -15,13 +15,11 @@ Future<void> initializeHive() async {
   );
   Directory directory = await getApplicationDocumentsDirectory();
   Hive.init(directory.path);
-  Hive.registerAdapter<DataModel>(DataModelAdapter());
-   Hive.registerAdapter<Datamodelcat>(DatamodelcatAdapter());
+ 
 
   // Check if the box is already open before attempting to open it
     
-    await Hive.openBox<DataModel>('relm');
-    await Hive.openBox<Datamodelcat>('relmcat');
+
 
 }
 

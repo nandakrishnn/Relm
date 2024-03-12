@@ -16,7 +16,7 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   
   File? image;
-  late DataModel data;
+
 @override
   void initState() {
     fetchData();
@@ -41,90 +41,90 @@ class _ProfileState extends State<Profile> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                ValueListenableBuilder(
-                  valueListenable: dataListNotifier,
-                  builder: (BuildContext ctx, List<DataModel> dataList,
-                      Widget? child) {
-                    if (dataList.isEmpty) {
-                      return LinearProgressIndicator();
-                    }
+                // ValueListenableBuilder(
+                //   valueListenable: dataListNotifier,
+                //   builder: (BuildContext ctx, List<DataModel> dataList,
+                //       Widget? child) {
+                //     if (dataList.isEmpty) {
+                //       return LinearProgressIndicator();
+                //     }
 
-                    data = dataList.last;
-                    print('HI${data.id}');
-                    return Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 85),
-                          child: CircleAvatar(
-                            radius: 80,
-                            backgroundColor: Colors.white,
-                            backgroundImage:
-                               (data.imageprof != null &&
-                                              data.imageprof!.isNotEmpty)
-                                          ? FileImage(File(data.imageprof!))
-                                          : null,
-                                      child: (data.imageprof == null ||
-                                              data.imageprof!.isEmpty)
-                                          ? const Icon(
-                                              Icons.person,
-                                              size: 50.0,
-                                              color: Color.fromRGBO(
-                                                  11, 206, 131, 1),
-                                            )
-                                          : null,
-                    ),
-                        ),
-                        const SizedBox(
-                          height: 9,
-                        ),
-                        Text(
-                          data.uname ?? '',
-                          style: const TextStyle(
-                              fontSize: 19, fontWeight: FontWeight.w700),
-                        ),
-                        Text(
-                          data.email ?? '',
-                          style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w500),
-                        ),
-                        const SizedBox(
-                          height: 26,
-                        ),
-                        ElevatedButton(
-                          style: const ButtonStyle(
-                            backgroundColor: MaterialStatePropertyAll(
-                              Color.fromRGBO(63, 63, 63, 5),
-                            ),
-                          ),
-                          onPressed: () async {
-                            // Navigate to editProfile and await the result
-                            final updatedData = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EditProfile(
-                                  userdata: data,
+                //     data = dataList.last;
+                //     print('HI${data.id}');
+                //     return Column(
+                //       children: [
+                //         Padding(
+                //           padding: const EdgeInsets.only(top: 85),
+                //           child: CircleAvatar(
+                //             radius: 80,
+                //             backgroundColor: Colors.white,
+                //             backgroundImage:
+                //                (data.imageprof != null &&
+                //                               data.imageprof!.isNotEmpty)
+                //                           ? FileImage(File(data.imageprof!))
+                //                           : null,
+                //                       child: (data.imageprof == null ||
+                //                               data.imageprof!.isEmpty)
+                //                           ? const Icon(
+                //                               Icons.person,
+                //                               size: 50.0,
+                //                               color: Color.fromRGBO(
+                //                                   11, 206, 131, 1),
+                //                             )
+                //                           : null,
+                //     ),
+                //         ),
+                //         const SizedBox(
+                //           height: 9,
+                //         ),
+                //         Text(
+                //           data.uname ?? '',
+                //           style: const TextStyle(
+                //               fontSize: 19, fontWeight: FontWeight.w700),
+                //         ),
+                //         Text(
+                //           data.email ?? '',
+                //           style: const TextStyle(
+                //               fontSize: 18, fontWeight: FontWeight.w500),
+                //         ),
+                //         const SizedBox(
+                //           height: 26,
+                //         ),
+                //         ElevatedButton(
+                //           style: const ButtonStyle(
+                //             backgroundColor: MaterialStatePropertyAll(
+                //               Color.fromRGBO(63, 63, 63, 5),
+                //             ),
+                //           ),
+                //           onPressed: () async {
+                //             // Navigate to editProfile and await the result
+                //             final updatedData = await Navigator.push(
+                //               context,
+                //               MaterialPageRoute(
+                //                 builder: (context) => EditProfile(
+                //                   userdata: data,
                                 
-                                ),
-                              ),
-                            );
+                //                 ),
+                //               ),
+                //             );
 
-                            // Handle the updated data if necessary
-                            if (updatedData != null && updatedData is DataModel) {
-                              setState(() {
-                                // Update the UI with the new data
-                                data = updatedData;
-                              });
-                            }
-                          },
-                          child: const Text(
-                            'Edit Profile',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
+                //             // Handle the updated data if necessary
+                //             if (updatedData != null && updatedData is DataModel) {
+                //               setState(() {
+                //                 // Update the UI with the new data
+                //                 data = updatedData;
+                //               });
+                //             }
+                //           },
+                //           child: const Text(
+                //             'Edit Profile',
+                //             style: TextStyle(color: Colors.white),
+                //           ),
+                //         ),
+                //       ],
+                //     );
+                //   },
+                // ),
 
                 const SizedBox(
                   height: 55,
@@ -242,7 +242,7 @@ class _ProfileState extends State<Profile> {
   }
 Future<void> fetchData() async {
   try {
-    await getAlldata(); // Retrieve data from Hive box
+    // await getAlldata(); // Retrieve data from Hive box
     setState(() {}); // Trigger a rebuild after data is fetched
   } catch (e) {
     print('Error getting data: $e');

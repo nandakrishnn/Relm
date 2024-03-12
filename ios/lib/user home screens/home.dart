@@ -2,7 +2,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:relm/user%20home%20screens/Music.dart';
 import 'package:relm/user%20home%20screens/category.dart';
-import 'package:relm/user%20home%20screens/favourites.dart';
+
 import 'package:relm/user%20home%20screens/homescreen.dart';
 import 'package:relm/user%20home%20screens/profile.dart';
 
@@ -19,7 +19,7 @@ class _HomeState extends State<Home> {
     home1(),
     Music(),
     Categories(),
-    Favourites(),
+   
     Profile(),
   ];
 

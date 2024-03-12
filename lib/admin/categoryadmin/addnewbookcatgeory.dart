@@ -60,6 +60,7 @@ class _AddBookCatgeoryState extends State<AddBookCatgeory> {
                     else if(value.length<3){
                       return 'Enter a valid catgeory';
                     }
+                    return null;
                  
                   },
                   controller: bookcatname,
@@ -155,24 +156,24 @@ class _AddBookCatgeoryState extends State<AddBookCatgeory> {
                   padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                     EdgeInsets.symmetric(
                         horizontal: 50.0,
-                        vertical: 14.0), // Adjust padding as needed
+                        vertical: 14.0), 
                   ),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(
-                          24.0), // Adjust border radius as needed
+                          24.0), 
                     ),
                   ),
                   elevation: MaterialStateProperty.all(
-                      8), // Adjust elevation as needed
+                      8), 
                   overlayColor: MaterialStateProperty.resolveWith<Color>(
                     (Set<MaterialState> states) {
                       if (states.contains(MaterialState.pressed)) {
                         return Colors.black.withOpacity(
-                            0.5); // Change overlay color when pressed
+                            0.5); 
                       }
                       return Colors
-                          .transparent; // No overlay color when not pressed
+                          .transparent; 
                     },
                   ),
                 ),

@@ -1,7 +1,6 @@
-import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:relm/user%20home%20screens/database/db.dart';
-import 'package:relm/user%20home%20screens/database/functions.dart';
+
 
 class Categories extends StatefulWidget {
   const Categories({Key? key}) : super(key: key);
@@ -13,7 +12,7 @@ class Categories extends StatefulWidget {
 class _CategoriesState extends State<Categories> {
   @override
   Widget build(BuildContext context){
-    usercat();
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -82,48 +81,9 @@ class _CategoriesState extends State<Categories> {
                   ),
                 ),
                 SizedBox(height: 5),
-                Expanded(
-                  child:  ValueListenableBuilder(
-                    valueListenable:dataListNotifiercat ,
-                    builder: (BuildContext context, List<Datamodelcat> Datacat,Widget? child) {
-                      return  GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 6.0,
-                        mainAxisSpacing: 10.0,
-                        mainAxisExtent: 140,
-                        
-                      ),
-                      physics: ScrollPhysics(),
-                      itemBuilder: (BuildContext context, int index) {
-                        final data=Datacat[
-                          index
-                        ];
-                        return Card(
-                          
-                          elevation: 10,
-                          child: Column(
-                            children: [
-                              Container(
-                                width: 100, // Set a specific width
-                                height: 100, // Set a specific height
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  
-                                ),
-                                child: Image.file(File(data.catimage)), 
-                              ),
-                              Text(data.catname!)
-                            ],
-                          ),
-                        );
-                      },
-                      itemCount: Datacat.length,
-                    );
-                    },
-                  
-                  )
-                ),
+                // Expanded(
+                  // child:  /
+                // ),
               ],
             ),
           ),
@@ -135,7 +95,5 @@ class _CategoriesState extends State<Categories> {
     );
     
   }
-  Future<void>usercat()async{
-   await getAllCategories();
-  }
+
 }

@@ -6,8 +6,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:relm/Login.dart';
 import 'package:relm/user%20home%20screens/Music/editprofile.dart';
-import 'package:relm/user%20home%20screens/database/db.dart';
-import 'package:relm/user%20home%20screens/database/functions.dart';
+import 'package:relm/user%20home%20screens/splash/privacy_policy.dart';
+import 'package:relm/user%20home%20screens/splash/terms_Of_use.dart';
+import 'package:relm/user%20home%20screens/splash/tips_Relm.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -18,10 +21,8 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
 
-  late Stream<DocumentSnapshot> _userDataStream;
   late User? _user;
   File? image;
-  late DataModel data;
   late Stream<User?> _userStream;
   String? nanda;
   late Map<String, dynamic> _userData;
@@ -68,16 +69,16 @@ class _ProfileState extends State<Profile> {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Padding(
-              padding: EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
               child: StreamBuilder<User?>(
                 stream: _userStream,
                 builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
+                    return const CircularProgressIndicator();
                   }
 
                   if (!snapshot.hasData || snapshot.data == null) {
-                    return Center(
+                    return const Center(
                       child: Text('No user Logged in'),
                     );
                   }
@@ -85,9 +86,9 @@ class _ProfileState extends State<Profile> {
                   User? user = snapshot.data;
                   return Column(
                     children: [
-                      SizedBox(height: 35,),
+                      const SizedBox(height: 35,),
                       ClipOval(
-                          child: Container(
+                          child: SizedBox(
                               height: 150,
                               width: 150,
                               
@@ -97,7 +98,7 @@ class _ProfileState extends State<Profile> {
                                       fit: BoxFit.cover,
                                       
                                     )
-                                  : Container(
+                                  : const SizedBox(
                                       height: 150,
                                       width: 150,
                                     ))
@@ -134,6 +135,7 @@ class _ProfileState extends State<Profile> {
                         ),
                         onPressed: () async {
                           // Navigate to editProfile and await the result
+                          // ignore: unused_local_variable
                           final updatedData = await Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -146,20 +148,15 @@ class _ProfileState extends State<Profile> {
                           );
 
                           // Handle the updated data if necessary
-                          if (updatedData != null && updatedData is DataModel) {
-                            setState(() {
-                              // Update the UI with the new data
-                              data = updatedData;
-                            });
-                          }
+                    
                         },
                         child: const Text(
                           'Edit Profile',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
-                      SizedBox(
-                        height: 15,
+                      const SizedBox(
+                        height: 35,
                       ),
                       Card(
                         elevation: 5,
@@ -174,7 +171,9 @@ class _ProfileState extends State<Profile> {
                                 fontWeight: FontWeight.w600),
                           ),
                           trailing: IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>const TipsPage()));
+                              },
                               icon: const Icon(Icons.arrow_forward_ios_rounded),
                               color: Colors.white),
                         ),
@@ -195,7 +194,9 @@ class _ProfileState extends State<Profile> {
                                 fontWeight: FontWeight.w600),
                           ),
                           trailing: IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>const TermsOfUse()));
+                              },
                               icon: const Icon(Icons.arrow_forward_ios_rounded),
                               color: Colors.white),
                         ),
@@ -203,30 +204,30 @@ class _ProfileState extends State<Profile> {
                       const SizedBox(
                         height: 5,
                       ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Card(
-                        elevation: 5,
-                        color: const Color.fromARGB(63, 63, 63, 5),
-                        shadowColor: Colors.black45,
-                        child: ListTile(
-                          title: const Text(
-                            'Version',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 255, 255, 255),
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600),
-                          ),
-                          trailing: IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.arrow_forward_ios_rounded),
-                              color: Colors.white),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
+                      // const SizedBox(
+                      //   height: 5,
+                      // ),
+                      // Card(
+                      //   elevation: 5,
+                      //   color: const Color.fromARGB(63, 63, 63, 5),
+                      //   shadowColor: Colors.black45,
+                      //   child: ListTile(
+                      //     title: const Text(
+                      //       'Version',
+                      //       style: TextStyle(
+                      //           color: Color.fromARGB(255, 255, 255, 255),
+                      //           fontSize: 16,
+                      //           fontWeight: FontWeight.w600),
+                      //     ),
+                      //     trailing: IconButton(
+                      //         onPressed: () {},
+                      //         icon: const Icon(Icons.arrow_forward_ios_rounded),
+                      //         color: Colors.white),
+                      //   ),
+                      // ),
+                      // const SizedBox(
+                      //   height: 5,
+                      // ),
                       Card(
                         elevation: 5,
                         color: const Color.fromARGB(63, 63, 63, 5),
@@ -240,7 +241,9 @@ class _ProfileState extends State<Profile> {
                                 fontWeight: FontWeight.w600),
                           ),
                           trailing: IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>const PrivacyPolicy()));
+                              },
                               icon: const Icon(Icons.arrow_forward_ios_rounded),
                               color: Colors.white),
                         ),
@@ -248,63 +251,58 @@ class _ProfileState extends State<Profile> {
                       const SizedBox(
                         height: 5,
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => Login()));
-                        },
-                        child: Card(
-                          elevation: 5,
-                          color: const Color.fromARGB(63, 63, 63, 5),
-                          shadowColor: Colors.black45,
-                          child: ListTile(
-                            title: const Text(
-                              'Logout',
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 255, 255, 255),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            trailing: IconButton(
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: Text(
-                                            'Are you sure you want to logout'),
-                                        actions: [
-                                          TextButton(
-                                              onPressed: () {
-                                                FirebaseAuth.instance
-                                                    .signOut()
-                                                    .then((value) {
-                                                  Navigator.pushAndRemoveUntil(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              Login()),
-                                                      (route) => false);
-                                                });
-                                                ;
-                                              },
-                                              child: Text('Yes')),
-                                          TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: Text('No'))
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                                icon:
-                                    const Icon(Icons.arrow_forward_ios_rounded),
-                                color: Colors.white),
+                      Card(
+                        elevation: 5,
+                        color: const Color.fromARGB(63, 63, 63, 5),
+                        shadowColor: Colors.black45,
+                        child: ListTile(
+                          title: const Text(
+                            'Logout',
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 255, 255, 255),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600),
                           ),
+                          trailing: IconButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text(
+                                          'Are you sure you want to logout'),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              FirebaseAuth.instance
+                                                  .signOut()
+                                                  .then((value) {
+                                                singout(context);
+                                              });
+                                              ;
+                                            },
+                                            child: const Text('Yes')),
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text('No'))
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              icon:
+                                  const Icon(Icons.arrow_forward_ios_rounded),
+                              color: Colors.white),
                         ),
                       ),
+                      const SizedBox(height: 10,),
+                      const Column(children: [
+ Text('Version',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18,color: Colors.white),),
+                      Text('1.0.0',style: TextStyle(fontSize: 15,color: Colors.white),)
+                      ],)
+                     
                     ],
                   );
                 },
@@ -341,7 +339,7 @@ class _ProfileState extends State<Profile> {
             profile = null; // or assign a default value
           }
 
-          print('User Data: $_userData'); // Print user data for debugging
+          // Print user data for debugging
           print('Name: $nanda'); // Print name for debugging
         });
       } else {
@@ -352,11 +350,32 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  void updateUserData(Map<String, dynamic> userData) {
-    setState(() {
-      _userData = userData;
-      String name = userData['Name'];
-      nanda = name;
-    });
-  }
+void updateUserData(Map<String, dynamic> userData) {
+  setState(() {
+    _userData = userData;
+    String name = userData['Name'];
+    nanda = name;
+
+    if (_userData.containsKey('Image')) {
+      dynamic imageValue = _userData['Image'];
+      if (imageValue != null) {
+        String base64Image = imageValue as String;
+        Uint8List bytes = base64Decode(base64Image);
+        profile = bytes;
+      } else {
+      
+        profile = null; 
+      }
+    }
+  });
+}
+
+  singout(BuildContext context) async {
+    final shared = await SharedPreferences.getInstance();
+    await shared.clear();
+    // ignore: use_build_context_synchronously
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => Login()),
+        (route)=>false);
+}
 }

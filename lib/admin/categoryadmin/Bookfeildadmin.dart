@@ -3,16 +3,17 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:audioplayers/audioplayers.dart';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 import 'package:image_picker/image_picker.dart';
+// ignore: depend_on_referenced_packages
 import 'package:path/path.dart';
 import 'package:random_string/random_string.dart';
-import 'package:relm/admin/categoryadmin/playaudioadmin.dart';
+
 
 import 'package:relm/admin/categoryadmin/viewpdfbookfeild.dart';
 
@@ -33,6 +34,7 @@ class _BookFieldState extends State<BookField> {
   final TextEditingController bookAuthor = TextEditingController();
   final TextEditingController Authordes = TextEditingController();
   final TextEditingController BoookCategory = TextEditingController();
+    final TextEditingController Rating = TextEditingController();
   final GlobalKey<FormFieldState> fromkey = GlobalKey();
   File? file;
   File? Musicfile;
@@ -216,6 +218,35 @@ class _BookFieldState extends State<BookField> {
                 const SizedBox(
                   height: 19,
                 ),
+                 TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  // validator: (value){
+                  //       if(value!.isEmpty){
+                  //           return 'Enter The name';
+                  //       }
+                  //       else if(value.length<3){
+                  //         return 'Enter the correct Book catgeory';
+                  //       }
+                  //       else{
+                  //         return null;
+                  //       }
+                  //     },
+                  controller: Rating,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.rate_review),
+                    
+                    labelText: 'Rating(Optional)',
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+                   const SizedBox(
+                  height: 19,
+                ),
                 GestureDetector(
                   onTap: selectFile,
                   child: ClipRRect(
@@ -359,7 +390,7 @@ class _BookFieldState extends State<BookField> {
                   elevation: 13,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: Container(
+                    child: SizedBox(
                       height: 200,
                       width: 250,
                       child: imagebook != null
@@ -465,14 +496,14 @@ class _BookFieldState extends State<BookField> {
 
                     // Upload the PDF and audio files
                     await uploadPdf(context);
+                    // ignore: use_build_context_synchronously
                     await uploadAudio(context);
 
                     // Proceed to add book details only if both PDF and audio are uploaded successfully
                     if (fileurl != null && Audiofileurl != null) {
                       String id = randomAlphaNumeric(10);
-                      // Check if book images are selected
                       if (imagebook != null && image1author != null) {
-                        // Convert image files to bytes and encode to base64
+                       
                         List<int> imageBytes = imagebook!.readAsBytesSync();
                         String base64Imagebook = base64Encode(imageBytes);
 
@@ -492,7 +523,9 @@ class _BookFieldState extends State<BookField> {
                           'ImageOfAuthor': base64Imageauthor,
                           'PdfUrl': fileurl,
                           'CatgeoryName': BoookCategory.text,
-                          'AudioUrl': Audiofileurl
+                          'AudioUrl': Audiofileurl,
+                          'Bookrating':Rating.text,
+                          'Time':DateTime.now()
                         };
 
                         // Add book details to the database

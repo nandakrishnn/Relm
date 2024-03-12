@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:relm/user%20home%20screens/categorydeatils.dart';
 
 import 'package:relm/user%20home%20screens/database/firebasedb.dart';
@@ -19,10 +20,14 @@ class _CategoriesState extends State<Categories> {
   final TextEditingController updatedmuiccatname = TextEditingController();
   File? image;
 
-  getonload() async {
-    MusicCatStream = await fireDatabase().getbookcatgories();
-    setState(() {});
+void getonload() async {
+  final stream = await fireDatabase().getbookcatgories();
+  if (mounted) {
+    setState(() {
+      MusicCatStream = stream;
+    });
   }
+}
 
   @override
   void initState() {
@@ -63,14 +68,16 @@ class _CategoriesState extends State<Categories> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(6),
                         child: Container(
+                          height: MediaQuery.of(context).size.height*.3,
+                     
                           decoration: BoxDecoration(
                             boxShadow: [
                               BoxShadow(
                                 color: Color.fromARGB(255, 57, 54, 54)
-                                    .withOpacity(0.5), // Shadow color
-                                spreadRadius: 10, // Spread radius
-                                blurRadius: 7, // Blur radius
-                                offset: Offset(0, 3), // Offset
+                                    .withOpacity(0.5), 
+                                spreadRadius: 10, 
+                                blurRadius: 7, 
+                                offset: Offset(0, 3),
                               ),
                             ],
                             borderRadius: BorderRadius.circular(5),
@@ -132,7 +139,21 @@ class _CategoriesState extends State<Categories> {
                   },
                 ),
               )
-            : Container();
+            :   Center(
+            child: Container(
+                      
+                        height: MediaQuery.of(context).size.height / 1.6,
+                        width: MediaQuery.of(context).size.width/1.5,
+                        child: SizedBox(
+                     
+                          child: Center(
+                              child: Lottie.network(
+                                  'https://lottie.host/6e1e402d-c68d-44a0-8409-998b62bb56ec/tsXeskJTiP.json',
+                                  
+                                  height: MediaQuery.of(context).size.height * 0.5,
+                          width: MediaQuery.of(context).size.width * 0.5,)),
+                        )),
+          );
       },
     );
   }

@@ -4,9 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:relm/admin/categoryadmin/BookDetails.dart';
 import 'package:relm/admin/categoryadmin/Bookfeildadmin.dart';
-import 'package:relm/admin/categoryadmin/bookcategoryadmin.dart';
 import 'package:relm/admin/categoryadmin/editbookdetails.dart';
-import 'package:relm/user%20home%20screens/database/firebasedb.dart';
+
 
 //the page which shows the books in diffrent categories
 
@@ -85,6 +84,7 @@ class _BookCategoryDetailsAdminState extends State<BookCategoryDetailsAdmin> {
                             children: [
                               Text(
                                 '${ds["NameOfBook"]}',
+                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 20,

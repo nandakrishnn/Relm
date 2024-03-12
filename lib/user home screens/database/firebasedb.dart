@@ -1,4 +1,6 @@
 // ignore: camel_case_types
+// ignore_for_file: await_only_futures, non_constant_identifier_names
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class fireDatabase{
@@ -57,18 +59,7 @@ Future addBookCatgeorydetials(Map<String,dynamic>bokCatgeoryinfo,dynamic id)asyn
   
 }
 
-
-
-
-
-
-
-
-
-
-
-
-//addbooks in categories
+//addbooks in categoris
   Future addBookdetailsinCategory(Map<String, dynamic> BookListsInfo, String ListsId) async {
     return await FirebaseFirestore.instance.collection("BooksInCatgeories").doc(ListsId).set(BookListsInfo);
   }
@@ -86,11 +77,6 @@ Future addBookCatgeorydetials(Map<String,dynamic>bokCatgeoryinfo,dynamic id)asyn
   
 }
 
-
-
-
-
-
 //user details
 Future Userdetials(Map<String,dynamic>Userinfo,dynamic id)async{
       return await FirebaseFirestore.instance.collection("UserDetails").doc(id).set(Userinfo);
@@ -106,4 +92,52 @@ Future Userdetials(Map<String,dynamic>Userinfo,dynamic id)async{
   return await FirebaseFirestore.instance.collection("UserDetails").doc(id).update(updateUser);
 }
 
+//recently viewed books
+
+  Future addToRecentlyViewed(Map<String, dynamic> recentlyViewedAddition, String ListsId) async {
+    return await FirebaseFirestore.instance.collection("RecentlyViewedBooks").doc(ListsId).set(recentlyViewedAddition);
+
+  }
+  
+  Future<Stream<QuerySnapshot>> getRecentBooks(String userId) async {
+  return FirebaseFirestore.instance
+      .collection("RecentlyViewedBooks")
+      .where("UserId", isEqualTo: userId)
+      .snapshots();
 }
+//favourites 
+Future addToFavourites(Map<String,dynamic>addFavourites,String ListsId)async{
+   await FirebaseFirestore.instance.collection("Favorites").doc(ListsId).set(addFavourites);
+}
+Future<Stream<QuerySnapshot>>getFavourites(String userId)async{
+  return FirebaseFirestore.instance.collection("Favorites").where("UserId",isEqualTo: userId).snapshots();
+}
+
+  Future removeFavourites(String Bookid,String UserId)async{
+  return await FirebaseFirestore.instance.collection("Favorites").doc(Bookid).delete();
+}
+Future favouritesRemove(String bookName,String UserId,String authorName)async{
+ try{
+    QuerySnapshot querySnapshot=await FirebaseFirestore.instance.collection('Favorites').where("NameOfBook",isEqualTo:bookName ).where("AuthorName",isEqualTo: authorName).where("UserId",isEqualTo: UserId).get();
+    if(querySnapshot.docs.isNotEmpty){
+      
+      for(DocumentSnapshot doc in querySnapshot.docs){
+        await doc.reference.delete();
+      }
+    }
+    else{
+      print('No matching documet')
+;    }
+ }
+ catch(e){
+print(e);
+ }
+}
+}
+
+
+
+
+
+
+

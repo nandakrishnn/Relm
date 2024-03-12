@@ -5,11 +5,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:relm/admin/musiccategories/musicincategories.dart';
 import 'package:relm/user%20home%20screens/database/firebasedb.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:path/path.dart'; 
+import 'package:path/path.dart';
 
 class EditMusicField extends StatefulWidget {
   final DocumentSnapshot ds;
@@ -25,6 +24,7 @@ class _EditMusicFieldState extends State<EditMusicField> {
   final TextEditingController musicNameController = TextEditingController();
   final TextEditingController categoryNameController = TextEditingController();
   final TextEditingController filenameController = TextEditingController();
+  final TextEditingController ratingController = TextEditingController();
   File? image;
   File? file;
   String? fileurl;
@@ -39,10 +39,11 @@ class _EditMusicFieldState extends State<EditMusicField> {
     musicAuthorController.text = widget.ds['MusicAuthorName'];
     musicNameController.text = widget.ds['MusicName'];
     categoryNameController.text = widget.ds['CatgeoryName'];
+    ratingController.text = widget.ds['Rating'];
     String imageUrl = widget.ds['Image'];
     bytes = base64Decode(imageUrl);
     String musicUrl = widget.ds['MusicUrl'];
-    filename = musicUrl.split('/').last; 
+    filename = musicUrl.split('/').last;
     filenameController.text = filename;
   }
 
@@ -54,16 +55,16 @@ class _EditMusicFieldState extends State<EditMusicField> {
         backgroundColor: Color.fromRGBO(63, 63, 63, 2),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/total baground.jpeg'),
-              fit: BoxFit.cover,
-            ),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/total baground.jpeg'),
+            fit: BoxFit.cover,
           ),
+        ),
+        child: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.all(16.0),
             child: Column(
@@ -71,17 +72,44 @@ class _EditMusicFieldState extends State<EditMusicField> {
               children: [
                 TextFormField(
                   controller: musicAuthorController,
-                  decoration: InputDecoration(labelText: 'Author Name'),
+                  
+                  decoration: InputDecoration(labelText: 'Author Name',
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(),
+                   prefixIcon: Icon(Icons.person_2_rounded),
+                  ),
                 ),
                 SizedBox(height: 20.0),
                 TextFormField(
                   controller: musicNameController,
-                  decoration: InputDecoration(labelText: 'Music Name'),
+                  decoration: InputDecoration(labelText: 'Music Name',
+                      filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(),
+                   prefixIcon: Icon(Icons.person),
+                  ),
                 ),
                 SizedBox(height: 20.0),
                 TextFormField(
                   controller: categoryNameController,
-                  decoration: InputDecoration(labelText: 'Category Name'),
+                  
+                  decoration: InputDecoration(labelText: 'Category Name',
+                    filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(),
+                   prefixIcon: Icon(Icons.category),
+                  ),
+                ),
+                  SizedBox(height: 20.0),
+                TextFormField(
+                  controller: ratingController,
+                  decoration: InputDecoration(
+                      filled: true,
+                  fillColor: Colors.white,
+                   border: OutlineInputBorder(),
+                   prefixIcon: Icon(Icons.rate_review),
+                  labelText: 'Rating'),
                 ),
                 SizedBox(height: 20.0),
                 Center(
@@ -103,36 +131,41 @@ class _EditMusicFieldState extends State<EditMusicField> {
                   ),
                 ),
                 SizedBox(height: 20.0),
-                 TextFormField(
-                controller: filenameController, 
-                decoration: InputDecoration(labelText: 'Music File Name'), // Display filename
-              ),SizedBox(height: 20,),
+                TextFormField(
+                  
+                  controller: filenameController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                      labelText: 'Music File Name'), // Display filename
+                ),
+                SizedBox(
+                  height: 20,
+                ),
                 Center(
                   child: ElevatedButton(
                     onPressed: () async {
-                        final result = await FilePicker.platform
+                      final result = await FilePicker.platform
                           .pickFiles(allowMultiple: false);
                       if (result != null) {
                         final path = result.files.single.path!;
                         setState(() {
                           file = File(path);
-                          filename = basename(path); // Extract filename from path
-                        filenameController.text = filename; 
+                          filename =
+                              basename(path); // Extract filename from path
+                          filenameController.text = filename;
                         });
                       }
-                      
                     },
                     child: Text('Choose New Music File'),
                   ),
                 ),
-                
                 SizedBox(height: 20.0),
                 Center(
                   child: ElevatedButton(
                     onPressed: () async {
                       String imageUrl = '';
                       String musicUrl = '';
-                  
+                
                       if (image1 != null) {
                         // Read the image file as bytes
                         List<int> imageBytes = await image1!.readAsBytes();
@@ -140,28 +173,26 @@ class _EditMusicFieldState extends State<EditMusicField> {
                         String base64Image = base64Encode(imageBytes);
                         // Construct the data URL
                         imageUrl = '${base64Image}';
+                      } else {
+                        imageUrl = widget.ds['Image'];
                       }
-                      else{
-                         imageUrl = widget.ds['Image'];
-                      }
-                  
+                
                       if (file != null) {
                         final fileName = basename(file!.path);
                         final destination = 'files/$fileName';
-                  
+                
                         final ref = FirebaseStorage.instance.ref(destination);
-                  
+                
                         // Upload the file to Firebase Storage
                         await ref.putFile(file!);
-                  
+                
                         // Get the download URL of the uploaded file
                         final downloadURL = await ref.getDownloadURL();
                         musicUrl = downloadURL;
-                      }
-                      else{
+                      } else {
                         musicUrl = widget.ds['MusicUrl'];
                       }
-                  
+                
                       // Update music details
                       Map<String, dynamic> updatedMusicDetails = {
                         'MusicAuthorName': musicAuthorController.text,
@@ -169,16 +200,17 @@ class _EditMusicFieldState extends State<EditMusicField> {
                         'CatgeoryName': categoryNameController.text,
                         'Image': imageUrl,
                         'MusicUrl': musicUrl,
+                        'Rating':ratingController.text
                       };
-                  
-                      await fireDatabase()
-                          .updatemusicdetails(widget.ds.id, updatedMusicDetails);
-                          
-                  
+                
+                      await fireDatabase().updatemusicdetails(
+                          widget.ds.id, updatedMusicDetails);
+                
                       // Show confirmation message
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('Music details updated successfully!+${musicUrl}'),
+                          content: Text(
+                              'Music details updated successfully!+${musicUrl}'),
                           backgroundColor: Colors.green,
                         ),
                       );

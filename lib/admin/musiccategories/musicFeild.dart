@@ -21,10 +21,12 @@ class _MusicFieldState extends State<MusicField> {
   final TextEditingController musicAuthor = TextEditingController();
   final TextEditingController musicName = TextEditingController();
   final TextEditingController catname = TextEditingController();
+  final TextEditingController ratingCtrl = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   File? file;
   File? image;
   String? fileurl;
-  double _uploadProgress = 0; 
+  double _uploadProgress = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -47,60 +49,120 @@ class _MusicFieldState extends State<MusicField> {
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Column(
+              //  crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Form(
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 12,
-                      ),
-                      TextFormField(
-                        controller: musicAuthor,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.person_2),
-                          labelText: 'Name of the Author',
-                          filled: true,
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
+                SingleChildScrollView(
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 12,
                         ),
-                      ),
-                      SizedBox(
-                        height: 19,
-                      ),
-                      TextFormField(
-                        controller: musicName,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.music_note_outlined),
-                          labelText: 'Name of the Music',
-                          filled: true,
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
+                        TextFormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          controller: musicAuthor,
+                          decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.person_2),
+                            labelText: 'Name of the Author',
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please fill this feild';
+                            }
+                            if (value.length < 3) {
+                              return 'Less number of Caharcters';
+                            }
+                            if (value.length > 30) {
+                              return 'Limit Exceeded';
+                            }
+                          },
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 19,
-                ),
-                TextFormField(
-                  controller: catname,
-                  decoration: InputDecoration(
-                    labelText: 'Name of the Category',
-                    prefixIcon: Icon(Icons.category_outlined),
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                        const SizedBox(
+                          height: 19,
+                        ),
+                        TextFormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          controller: musicName,
+                          decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.music_note_outlined),
+                            labelText: 'Name of the Music',
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please fill this feild';
+                            }
+                            if (value.length < 2) {
+                              return 'Less number of Caharcters';
+                            }
+                            if (value.length > 30) {
+                              return 'Limit Exceeded';
+                            }
+                          },
+                        ),
+                        const SizedBox(
+                          height: 19,
+                        ),
+                        TextFormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          controller: catname,
+                          decoration: InputDecoration(
+                            labelText: 'Name of the Category',
+                            prefixIcon: const Icon(Icons.category_outlined),
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please fill this feild';
+                            }
+                            if (value.length < 2) {
+                              return 'Less number of Caharcters';
+                            }
+                          },
+                        ),
+                        const SizedBox(
+                          height: 19,
+                        ),
+                        TextFormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          controller: ratingCtrl,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: 'Rating of music',
+                            prefixIcon: const Icon(Icons.rate_review_outlined),
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (!RegExp(r'^[0-9]+$').hasMatch(value!)) {
+                              return 'Only numbers are allowed';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 19,
+                        ),
+                      ],
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 19,
                 ),
                 GestureDetector(
                   onTap: selectFile,
@@ -110,27 +172,28 @@ class _MusicFieldState extends State<MusicField> {
                       height: 60,
                       width: MediaQuery.of(context).size.width,
                       color: const Color.fromARGB(255, 255, 255, 255),
-                      child: Center(
-                        child: Text('CHOOSE YOUR AUDIO',style: TextStyle(color: Colors.black),),
+                      child: const Center(
+                        child: Text(
+                          'CHOOSE YOUR AUDIO',
+                          style: TextStyle(color: Colors.black),
+                        ),
                       ),
                     ),
                   ),
                 ),
-
-                SizedBox(
+                const SizedBox(
                   height: 24,
                 ),
-
                 Text(
                   file != null
                       ? 'Selected File: ${file!.path.split('/').last}'
                       : 'No file selected',
-                  style: TextStyle(
+                  style: const TextStyle(
                       color: Colors.white,
                       fontSize: 19,
                       fontWeight: FontWeight.bold),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 14,
                 ),
                 GestureDetector(
@@ -143,30 +206,18 @@ class _MusicFieldState extends State<MusicField> {
                         : Image.asset('assets/noimageimage.jpg'),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    // if (musicAuthor.text.isEmpty ||
-                    //     musicName.text.isEmpty ||
-                    //     image == null ||
-                    //     fileurl == null) {
-                    //   ScaffoldMessenger.of(context).showSnackBar(
-                    //     SnackBar(
-                    //       content: Text(
-                    //           'Please fill all the fields to continue.'),
-                    //       backgroundColor: Colors.red,
-                    //     ),
-                    //   );
-                    //   return;
-                    // }
                     if (musicAuthor.text.isEmpty ||
                         musicName.text.isEmpty ||
                         catname.text.isEmpty ||
-                        file == null) {
+                        file == null ||
+                        image == null) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
+                        const SnackBar(
                           content:
                               Text('Please fill all the fields to continue.'),
                           backgroundColor: Colors.red,
@@ -174,56 +225,53 @@ class _MusicFieldState extends State<MusicField> {
                       );
                       return; // Stop further execution
                     }
-                    await uploadmusic(context);
-                    
-                   
+                    if (formKey.currentState!.validate()) {
+                      await uploadmusic(context);
 
-                    String id = randomAlphaNumeric(10);
-                    if (image != null) {
-                      // Convert image file to bytes
-                      List<int> imageBytes = image!.readAsBytesSync();
-                      // Encode image bytes to base64 string
-                      String base64Image = base64Encode(imageBytes);
+                      String id = randomAlphaNumeric(10);
+                      if (image != null) {
+                        // Convert image file to bytes
+                        List<int> imageBytes = image!.readAsBytesSync();
+                        // Encode image bytes to base64 string
+                        String base64Image = base64Encode(imageBytes);
 
-                      Map<String, dynamic> musicListsInfo = {
-                        'MusicAuthorName': musicAuthor.text,
-                        'Image': base64Image,
-                        'Id': id,
-                        'MusicName': musicName.text,
-                        'MusicUrl': fileurl,
-                        'CatgeoryName': catname.text
-                      };
-                      await fireDatabase()
-                          .addMusicCategoryDetails(musicListsInfo, id)
-                          .then((value) {
-                        print('added successfully');
-                        // Fetch updated music list
-                      });
-                      if (widget.onMusicAdded != null) {
-                        // Call the callback function to notify the parent widget
-                        widget.onMusicAdded!();
+                        Map<String, dynamic> musicListsInfo = {
+                          'MusicAuthorName': musicAuthor.text,
+                          'Image': base64Image,
+                          'Id': id,
+                          'MusicName': musicName.text,
+                          'MusicUrl': fileurl,
+                          'CatgeoryName': catname.text,
+                          'Rating': ratingCtrl.text
+                        };
+                        await fireDatabase()
+                            .addMusicCategoryDetails(musicListsInfo, id)
+                            .then((value) {
+                          print('added successfully');
+                          // Fetch updated music list
+                        });
+                        if (widget.onMusicAdded != null) {
+                          // Call the callback function to notify the parent widget
+                          widget.onMusicAdded!();
+                        }
+                        // Now you can use the musicCategoryInfo map as needed
+
+                        Navigator.pop(context);
                       }
-                      // Now you can use the musicCategoryInfo map as needed
-
-                      Navigator.pop(context);
                     }
                   },
-                  child: Text(
+                  child: const Text(
                     'ADD',
                     style: TextStyle(color: Colors.white),
                   ),
                   style: ButtonStyle(
-                      minimumSize: MaterialStateProperty.all(Size(150, 50)),
-                      backgroundColor: MaterialStatePropertyAll(Color.fromRGBO(
-                          63,
-                          63,
-                          63,
-                          0.5)) // Adjust the Size according to your requirements
+                      minimumSize:
+                          MaterialStateProperty.all(const Size(150, 50)),
+                      backgroundColor: const MaterialStatePropertyAll(
+                          Color.fromRGBO(63, 63, 63,
+                              0.5)) 
                       ),
                 ),
-                // ElevatedButton(onPressed: (){
-                //   uploadmusic(context);
-                // }, child: Text('heu'))
               ],
             ),
           ),
@@ -251,9 +299,14 @@ class _MusicFieldState extends State<MusicField> {
     });
   }
 
-  Future uploadmusic(BuildContext context) async {
+  Future uploadmusic(BuildContext? context) async {
     if (file == null) {
-      // Handle the case where no file is selected
+      ScaffoldMessenger.of(context!).showSnackBar(
+        const SnackBar(
+          content: Text('No image selected! Please select an image.'),
+          backgroundColor: Colors.red,
+        ),
+      );
       return;
     }
 
@@ -262,20 +315,27 @@ class _MusicFieldState extends State<MusicField> {
       final destination = 'files/$fileName';
 
       final ref = FirebaseStorage.instance.ref(destination);
-      
+      ScaffoldMessenger.of(context!).showSnackBar(
+        const SnackBar(
+          content: Row(
+            children: [
+              Text('Uploading file..'),
+              SizedBox(
+                width: 5,
+              ),
+              CircularProgressIndicator()
+            ],
+          ),
+          backgroundColor: Color.fromARGB(255, 16, 255, 120),
+        ),
+      );
 
       // Upload the file to Firebase Storage
       await ref.putFile(file!);
 
-      // Get the download URL of the uploaded file
       final downloadURL = await ref.getDownloadURL();
       fileurl = downloadURL;
-
-      // Update your database with the file URL
-      // Replace 'your_database_reference' with your actual database reference
-      // For example, if you are using Firestore:
-      // await FirebaseFirestore.instance.collection('your_collection').doc('your_document').update({'fileURL': downloadURL});
-
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
       // Display a confirmation message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -286,7 +346,7 @@ class _MusicFieldState extends State<MusicField> {
     } catch (e) {
       // Handle any errors that occur during the upload process
       print('Error uploading file: $e');
-      ScaffoldMessenger.of(context as BuildContext).showSnackBar(
+      ScaffoldMessenger.of(context!).showSnackBar(
         SnackBar(
           content: Text('Error uploading file: $e'),
           backgroundColor: Colors.red,

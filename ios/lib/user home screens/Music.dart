@@ -7,7 +7,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:relm/user%20home%20screens/database/firebasedb.dart';
-import 'package:relm/user%20home%20screens/viewmusicincat.dart';
+import 'package:relm/user%20home%20screens/view_musicincat.dart';
+
 
 class Music extends StatefulWidget {
   const Music({super.key});

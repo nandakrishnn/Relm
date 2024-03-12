@@ -30,6 +30,7 @@ environment:
 dependencies:
   audioplayers: ^5.2.1
   build_runner: ^2.4.8
+  cached_network_image: ^3.3.1
   cloud_firestore: ^4.15.3
   cupertino_icons: ^1.0.2
   curved_navigation_bar: ^1.0.3
@@ -40,11 +41,15 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_feather_icons: ^2.0.0+1
+  flutter_launcher_icons: ^0.13.1
   flutter_pdfview: ^1.3.2
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   hive_generator: ^2.0.1
   image_picker: ^1.0.7
+  just_audio: ^0.9.36
+  just_audio_cache: ^0.1.2
+  lottie: ^3.1.0
   path_provider: ^2.1.2
   random_string: ^2.3.1
   shared_preferences: ^2.2.2
@@ -54,6 +59,10 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/relm logo-modified.png"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter packages.
@@ -69,17 +78,10 @@ flutter:
     - assets/
     - assets/Signup baground.jpeg
     - assets/total baground.jpeg
-    - assets/binatural.jpg
     - assets/relm logo.png
-    - assets/orginal binatural.webp
-    - assets/deaming.jpeg
     - assets/orginal binatural1.jpg
     - assets/relaxing.jpeg
     - assets/relaxation.jpg
-    - assets/ajja.jpg
-    - assets/samadi.jpeg
-    - assets/comics category bg.png
-    - assets/add image image.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see
@@ -89,10 +91,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  fonts:
+    - family: Lato
+      fonts:
+        - asset: fonts/Lato-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

@@ -27,14 +27,12 @@ class _EditProfileState extends State<EditProfile> {
   late TextEditingController updateemail;
   late TextEditingController updatepass;
   late TextEditingController updateperu;
-  late Map<String, dynamic> _userData;
+
   Uint8List? profile;
   late String? finaloimage;
 @override
 void initState() {
   super.initState();
-  
-  _userData = widget.userData ?? {};
   updateuname = TextEditingController(text: widget.userData['username']);
   updateemail = TextEditingController(text: widget.userData['email'] ?? '');
   updatepass = TextEditingController(text: widget.userData['Password'] ?? '');

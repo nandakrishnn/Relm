@@ -1,13 +1,15 @@
 import 'dart:convert';
 
+import 'dart:typed_data';
+
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 class MusicPlayPage extends StatefulWidget {
   final DocumentSnapshot ds;
   const MusicPlayPage({Key? key, required this.ds}) : super(key: key);
-
 
   @override
   State<MusicPlayPage> createState() => _MusicPlayPageState();
@@ -15,148 +17,311 @@ class MusicPlayPage extends StatefulWidget {
 
 class _MusicPlayPageState extends State<MusicPlayPage> {
   Uint8List? bytes;
+  late final AudioPlayer audioPlayer;
+  late final AudioCache audioCache;
+
+  String? musicUrl;
+  Duration duration = const Duration();
+  Duration position = const Duration();
+  bool playing = false;
 
   @override
   void initState() {
-    // TODO: implement initState
-        String imageUrl = widget.ds['Image'];
-        print(imageUrl);
-      
-    bytes = base64Decode(imageUrl);
     super.initState();
+    String imageUrl = widget.ds['Image'];
+    print(imageUrl);
+    musicUrl = widget.ds['MusicUrl'];
+    print(musicUrl);
+    bytes = base64Decode(imageUrl);
+    audioPlayer = AudioPlayer();
+    audioCache = AudioCache(prefix: 'audio_cache/');
+    print('playing form cache');
+    audioCache.load(musicUrl!);
+    // Call getAudio() here to start audio playback when the widget is initialized
+    getAudio();
   }
+
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    audioPlayer.onDurationChanged.listen(null);
+    audioPlayer.onPositionChanged.listen(null);
+    audioPlayer.onPlayerComplete.listen(null);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-       appBar: AppBar(
-        title:  Text(widget.ds['MusicName'], style: TextStyle(color: Colors.white)),
-        backgroundColor: const Color.fromRGBO(63, 63, 63, 2),
-        centerTitle: true,
-      ),
+    return Scaffold(
       body: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/total baground.jpeg'),
-              fit: BoxFit.cover,
-            ),
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/total baground.jpeg'),
+            fit: BoxFit.cover,
           ),
+        ),
+        child: SingleChildScrollView(
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center
-            
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(height: 60,),
-              Container(
-                height: 250,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.background,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.shade500,
-                    blurRadius: 15,
-                    offset: Offset(4, 4)
-
+              SizedBox(
+                height: 28,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 270,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(Icons.arrow_back),
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    blurRadius: 5,
+                                    spreadRadius: 2,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: ClipOval(
+                                child: Image.asset(
+                                  'assets/relm logo.png',
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            const Text(
+                              'RELM',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 24,
+                                color: Color.fromRGBO(63, 63, 63, 5),
+                                letterSpacing: 1.2,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                  BoxShadow(
-                     color: Colors.grey.shade500,
-                    blurRadius: 15,
-                    offset: Offset(-4, -4)
-                  )
-                ]
+                ],
               ),
-                child:  Image.memory(bytes!),
+              const SizedBox(height: 45),
+              Container(
+                height: 300,
+                decoration: const BoxDecoration(
+                  color: Colors.transparent,
+                  boxShadow: [
+                    BoxShadow(
+                        color: Color.fromARGB(255, 106, 74, 74),
+                        blurRadius: 15,
+                        offset: Offset(4, 4)),
+                    BoxShadow(
+                        color: Color.fromARGB(255, 12, 55, 55),
+                        blurRadius: 15,
+                        offset: Offset(-4, -4))
+                  ],
+                ),
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.memory(bytes!)),
               ),
-                      SizedBox(height: 3,),
-             Text(
-  widget.ds['MusicName'],
-  style: TextStyle(
-    fontSize: 23,
-    fontWeight: FontWeight.bold,
-    color: Colors.black, // Change the text color as needed
-    shadows: [
-      Shadow(
-        color: Colors.grey.withOpacity(0.5), // Set shadow color and opacity
-        offset: Offset(2, 2), // Set shadow offset
-        blurRadius: 2, // Set shadow blur radius
-      ),
-    ],
-    decoration: TextDecoration.underline, // Add underline decoration
-    decorationColor: Colors.blue, // Set underline color
-    decorationStyle: TextDecorationStyle.solid, // Set underline style
-    letterSpacing: 1.5, // Adjust letter spacing as needed
-    wordSpacing: 2.0, // Adjust word spacing as needed
-    fontStyle: FontStyle.italic, // Apply italic font style
-    // fontFamily: 'Roboto', // Specify custom font family
-    // shadows: [
-    //   // Shadow(
-    //   //   color: Colors.black,
-    //   //   offset: Offset(1, 1),
-    //   //   blurRadius: 3,
-    //   // ),
-    // ],
-  ),
-),
-
-              SizedBox(height: 5,),
-             Text(
-  widget.ds['MusicAuthorName'],
-  style: TextStyle(
-    fontSize: 23,
-    fontWeight: FontWeight.bold,
-    color: Colors.black,
-    shadows: [
-      Shadow(
-        color: Colors.grey.withOpacity(0.5), // Set shadow color and opacity
-        offset: Offset(2, 2),   blurRadius: 2,
-      ),
-    ],
-    decoration: TextDecoration.none, 
-    letterSpacing: 1.0, 
-    wordSpacing: 2.0, 
-    fontStyle: FontStyle.normal, 
-    fontFamily: 'Roboto', 
-    // shadows: [
-    //   Shadow(
-    //     color: Colors.black,
-    //     offset: Offset(1, 1),
-    //     blurRadius: 3,
-    //   ),
-    // ],
-  ),
-),
-
-              // // Text(widget.ds['MusicName'],style: TextStyle(fontSize: 23,fontWeight: FontWeight.bold),),
-              // Card(
-              //   elevation: 12,
-              //   child: Container(
-              //     height: 280,
-              //     width: 230,
-              //     // color: Colors.amber,
-              //     // child: Image.memory(bytes!),
-              //   ),
-              // ),
-              //  SizedBox(height: 14,),
-              // // Text(widget.ds['MusicName'],style: TextStyle(fontSize: 23,fontWeight: FontWeight.bold),),
-              // SizedBox(height: 4,),
-              // Text(widget.ds['MusicAuthorName'],style: TextStyle(fontSize: 23,fontWeight: FontWeight.bold)),
-              // Slider(min:0,
-              // max: 100,
-              // value: 40,
-              // onChanged: (value){},
-              // activeColor: Colors.white,
-              // inactiveColor: Colors.white54,
-
-              
-              // )
-            
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.only(left: 50),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.ds['MusicName'],
+                        style: TextStyle(
+                          fontSize: 23,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 0, 0, 0),
+                          shadows: [
+                            Shadow(
+                              color: Color.fromARGB(255, 210, 197, 197)
+                                  .withOpacity(0.5),
+                              offset: const Offset(2, 2),
+                              blurRadius: 2,
+                            ),
+                          ],
+                          decorationStyle: TextDecorationStyle.solid,
+                          letterSpacing: 1.5,
+                          wordSpacing: 2.0,
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.person_2_outlined,
+                            size: 30,
+                          ),
+                          SizedBox(width: 2),
+                          Text(
+                            widget.ds['MusicAuthorName'],
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 0, 0, 0),
+                              shadows: [
+                                Shadow(
+                                  color: Color.fromARGB(255, 210, 197, 197)
+                                      .withOpacity(0.5),
+                                  offset: const Offset(2, 2),
+                                  blurRadius: 2,
+                                ),
+                              ],
+                              decoration: TextDecoration.none,
+                              letterSpacing: 1.0,
+                              wordSpacing: 2.0,
+                              fontStyle: FontStyle.normal,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Slider.adaptive(
+                min: 0.0,
+                activeColor: Colors.black,
+                value: position.inSeconds.toDouble(),
+                max: duration.inSeconds.toDouble(),
+                onChanged: (double value) {
+                  setState(() {
+                    audioPlayer.seek(Duration(seconds: value.toInt()));
+                  });
+                },
+                onChangeEnd: (double value) {
+                  audioPlayer.seek(position);
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '${position.inMinutes.remainder(60).toString().padLeft(2, '0')}:${(position.inSeconds.remainder(60)).toString().padLeft(2, '0')}',
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    Text(
+                      '${duration.inMinutes.remainder(60).toString().padLeft(2, '0')}:${(duration.inSeconds.remainder(60)).toString().padLeft(2, '0')}',
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      audioPlayer
+                          .seek(Duration(seconds: position.inSeconds - 30));
+                    },
+                    icon: const Icon(Icons.fast_rewind, size: 45),
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      if (audioPlayer.state == PlayerState.playing) {
+                        await audioPlayer.pause();
+                      } else {
+                        if (musicUrl != null) {
+                          await audioPlayer.play(UrlSource(musicUrl!));
+                        }
+                      }
+                      setState(() {
+                        playing = audioPlayer.state == PlayerState.playing;
+                      });
+                    },
+                    child: Icon(
+                      playing
+                          ? Icons.pause_circle_filled_outlined
+                          : Icons.play_circle_filled_outlined,
+                      size: 70,
+                      color: Color.fromARGB(255, 219, 207, 207),
+                      shadows: [
+                        Shadow(
+                            color: Color.fromRGBO(63, 63, 63, 20),
+                            blurRadius: 15,
+                            offset: Offset(4, 4))
+                      ],
+                    ),
+                  ),
+                  InkWell(
+                    child: IconButton(
+                      onPressed: () {
+                        audioPlayer
+                            .seek(Duration(seconds: position.inSeconds + 30));
+                      },
+                      icon: const Icon(
+                        Icons.fast_forward,
+                        size: 45,
+                      ),
+                    ),
+                  ),
+                
+                ],
+              ),
             ],
           ),
+        ),
       ),
     );
   }
 
-   // Text(widget.ds['MusicName'],style: TextStyle(fontSize: 23,fontWeight: FontWeight.bold),),
-             
-}
+  void getAudio() {
+    if (musicUrl != null) {
+      audioPlayer.play(UrlSource(musicUrl!));
 
+      audioPlayer.onDurationChanged.listen((Duration d) {
+        if (mounted) {
+          setState(() {
+            duration = d;
+          });
+        }
+      });
+      audioPlayer.onPositionChanged.listen((Duration p) {
+        if (mounted) {
+          setState(() {
+            position = p;
+          });
+        }
+      });
+      audioPlayer.onPlayerComplete.listen((event) {
+        if (mounted) {
+          setState(() {
+            playing = false;
+          });
+        }
+      });
+    } else {
+      print('No music URL provided');
+    }
+  }
+}

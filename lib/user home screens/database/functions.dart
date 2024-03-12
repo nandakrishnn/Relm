@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:relm/user%20home%20screens/database/db.dart';
 
@@ -6,20 +8,18 @@ ValueNotifier<List<AddNoteUser>> dataListNotifierNote = ValueNotifier([]);
 Future<void> addNote(AddNoteUser value) async {
   final allDB = await Hive.openBox<AddNoteUser>('BookNote');
   try {
-    final id = await allDB.add(value); // Add DataModel to Hive and get ID
+    await IDGenerator.initialize();
+    final id = IDGenerator.generateUniqueID();
     print('Added DataModel with ID: $id');
-
-   
+    
     AddNoteUser newValue = AddNoteUser(
-        id:id,
-        description: value.description,
-        title: value.title
+      id: id,
+      description: value.description,
+      title: value.title,
     );
 
-    dataListNotifierNote.value = [
-      ...dataListNotifierNote.value,
-      newValue
-    ]; 
+    await allDB.put(id, newValue);
+    dataListNotifierNote.value = [...dataListNotifierNote.value, newValue];
     dataListNotifierNote.notifyListeners();
   } catch (e) {
     print('Error adding data: $e');
@@ -27,20 +27,22 @@ Future<void> addNote(AddNoteUser value) async {
     await allDB.close();
   }
 }
-Future<void> getAllNote() async {
-  final noteDB = await Hive.openBox<AddNoteUser>('BookNote');
-  try {
-    final List<AddNoteUser> notes = noteDB.values.toList();
 
-  dataListNotifierNote.value = List<AddNoteUser>.from(notes);
- 
-   dataListNotifierNote.notifyListeners();
+Future<void> getAllNote() async {
+  try {
+    final allDB = await Hive.openBox<AddNoteUser>('BookNote');
+    final dataList = List<AddNoteUser>.from(allDB.values);
+    
+    dataListNotifierNote.value = [...dataList];
+    dataListNotifierNote.notifyListeners();
+    print("Data loaded successfully");
+    
+    await allDB.close();
   } catch (e) {
-    print('Error getting categories: $e');
-  } finally {
-    await noteDB.close();
+    print('Error getting data: $e');
   }
 }
+
 Future<void> DelNote(int id) async {
   final noteDB = await Hive.openBox<AddNoteUser>('BookNote');
   try {
@@ -56,6 +58,43 @@ Future<void> DelNote(int id) async {
     print('Error deleting category: $e');
   } finally {
     await noteDB.close();
+  }
+}
+
+Future<void>editNote(int id,AddNoteUser newValue)async{
+final allData=await Hive.openBox<AddNoteUser>('BookNote');
+final existingData=allData.get(id);
+existingData?.description=newValue.description;
+existingData?.title=newValue.title;
+await allData.put(id,existingData!);
+
+int index=dataListNotifierNote.value.indexWhere((data) =>data.id==id);
+if(index!=-1){
+  dataListNotifierNote.value[index]=existingData;
+  dataListNotifierNote.notifyListeners();
+}
+    
+}
+
+class IDGenerator {
+  static const String _counterBoxKey = 'counterBoxKey';
+  static late Box<int> _counterBox;
+
+  // Initialize the counter using the stored value or default to 0
+  static int _counter = _counterBox.get('counter') ?? 0;
+
+  static Future<void> initialize() async {
+    // Open the counter box
+    _counterBox = await Hive.openBox<int>(_counterBoxKey);
+  }
+
+  static int generateUniqueID() {
+    final generatedID = _counter++;
+
+    // Store the updated counter in the box
+    _counterBox.put('counter', _counter);
+
+    return generatedID;
   }
 }
 

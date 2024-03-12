@@ -1,8 +1,7 @@
-import 'dart:math';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:relm/user%20home%20screens/Music/addbokk.dart';
+import 'package:relm/user%20home%20screens/Music/edit_Note.dart';
 import 'package:relm/user%20home%20screens/database/db.dart';
 import 'package:relm/user%20home%20screens/database/functions.dart';
 
@@ -21,19 +20,17 @@ class _BookNoteAddState extends State<BookNoteAdd> {
     bookdes = bookdes.toLowerCase();
     query = query.toLowerCase();
     return booktitle.contains(query) || bookdes.contains(query);
-  }
+  } 
+
   @override
   void initState() {
-    getAllNote();
-    // TODO: implement initState
     super.initState();
-
+    getAllNote();
   }
 
   @override
   Widget build(BuildContext context) {
-    String title1 = ''; 
-    String description = ''; 
+
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -44,7 +41,10 @@ class _BookNoteAddState extends State<BookNoteAdd> {
           );
         },
         backgroundColor: Color.fromRGBO(63, 63, 63, 5),
-        child: Icon(Icons.add,color: Colors.white,),
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
         shape: CircleBorder(),
       ),
       body: Container(
@@ -120,7 +120,7 @@ class _BookNoteAddState extends State<BookNoteAdd> {
                 style: TextStyle(color: Colors.white),
                 controller: seachctrl,
                 onChanged: (query) {
-                  setState(() {}); // Update the UI when search query changes
+                  setState(() {});
                 },
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.search),
@@ -135,82 +135,139 @@ class _BookNoteAddState extends State<BookNoteAdd> {
                 ),
               ),
             ),
-            ValueListenableBuilder(
-              valueListenable: dataListNotifierNote,
-              builder: (BuildContext context, List<AddNoteUser> savedNote,
-                  Widget? child) {
-                return Expanded(
-                  child: ListView.builder(
-                    itemCount: savedNote.length,
-                    itemBuilder: (context, index) {
-                      final data = savedNote[index];
-                      title1 = data.title!;
-                      description = data.description!;
-                      if (seachctrl.text.isEmpty ||
-                          matchesSearchQuery(seachctrl.text, title1, description)) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
+ValueListenableBuilder(
+  valueListenable: dataListNotifierNote,
+  builder: (BuildContext context, List<AddNoteUser> savedNote, Widget? child) {
+    return Flexible(
+      child: ListView.builder(
+        shrinkWrap: true,
+        physics: AlwaysScrollableScrollPhysics(),
+        itemCount: savedNote.length,
+        itemBuilder: (context, index) {
+          final data = savedNote[index];
+          if (seachctrl.text.isEmpty ||
+              matchesSearchQuery(seachctrl.text, data.title!, data.description!)) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                
+                  child: Column(
+                    children: [
+                      Dismissible(
+                        key: Key(data.id.toString()),
+                        confirmDismiss: (direction) => showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Are you sure you want to delete?'),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          DelNote(data.id!);
+                                          savedNote.removeAt(index);
+                                          Navigator.pop(context);
+                                        });
+                                      },
+                                      child: Text('Yes')),
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text('No'))
+                                ],
+                                shape: RoundedRectangleBorder(),
+                              );
+                            }),
+                        onDismissed: (direction) {
+                          setState(() {});
+                        },
+                        background: Container(
+                          color: Colors.red,
+                          alignment: Alignment.centerRight,
+                          child: Row(
+                            children: [
+                              Text(
+                                'Delete',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              Icon(Icons.delete),
+                            ],
+                          ),
+                        ),
+                        child: Container(
+                          // height: 150,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                              color: Color.fromARGB(163, 255, 255, 255)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
                             child: Column(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceEvenly,
                               children: [
-                                Dismissible(
-                                  key: Key(
-                                    data.id.toString(),
-                                  ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Icon(Icons.dock),
+                                    Text(
+                                      data.title!,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20),
+                                    ),
 
-                                    onDismissed: (direction) {
-                                      setState(() {
-                                         DelNote(data.id!);
-                                         savedNote.removeAt(index);
-                                      });
-                                    },
-                                    background: Container(
-                                      color: Colors.red,
-                                      alignment: Alignment.centerRight,
-                                      child: Icon(Icons.delete),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EditNoteScreen(
+                                                      data: data,
+                                                    )));
+                                      },
+                                      child: Icon(Icons.edit),
+                                    )
+                                  ],
+                                ),
+                                SizedBox(height: 25,),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 12, right: 12,),
+                                  child: Text(
+                                    data.description!,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 17.5,
                                     ),
-                                  child: Container(
-                                    height: 110,
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
-                                        color: const Color.fromARGB(
-                                            63, 63, 63, 110)),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Text(
-                                          data.title!,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(left: 12,right: 12),
-                                          child: Text(data.description!,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 17.5,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                              ),
-                                        )
-                                      ],
-                                    ),
+                                    // overflow: TextOverflow.ellipsis,
                                   ),
                                 )
                               ],
                             ),
                           ),
-                        );
-                      }
-                      return Container();
-                    },
+                        ),
+                      )
+                    ],
                   ),
-                );
-              },
-            ),
+                ),
+              ),
+            );
+          }
+        
+          return Container();
+        },
+      ),
+    );
+  },
+),
+
           ],
         ),
       ),

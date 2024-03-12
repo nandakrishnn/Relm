@@ -175,7 +175,6 @@ class SignUp extends StatelessWidget {
     if (username.isEmpty || email.isEmpty || cfrmpass.isEmpty) {
       return;
     }
-    final data = DataModel(uname: username, email: email, password: cfrmpass, imageprof: '');
-    addData(data);
+  
   }
 }

@@ -1,15 +1,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:relm/user%20home%20screens/database/db.dart';
-import 'package:relm/user%20home%20screens/database/functions.dart';
+
 
 class EditProfile extends StatefulWidget {
-  final DataModel userdata;
+  // final DataModel userdata;
 
   EditProfile({
     Key? key,
-    required this.userdata,
+
   }) : super(key: key);
   @override
   State<EditProfile> createState() => _EditProfileState();
@@ -24,13 +23,15 @@ class _EditProfileState extends State<EditProfile> {
   @override
   void initState() {
     super.initState();
-    updateuname = TextEditingController(text: widget.userdata.uname);
-    updateemail = TextEditingController(text: widget.userdata.email);
-    updatepass = TextEditingController(text: widget.userdata.password);
-    if (widget.userdata.imageprof != null &&
-        widget.userdata.imageprof!.isNotEmpty) {
-      image = File(widget.userdata.imageprof!);
-    }
+  
+    // super.initState();
+    // updateuname = TextEditingController(text: widget.userdata.uname);
+    // updateemail = TextEditingController(text: widget.userdata.email);
+    // updatepass = TextEditingController(text: widget.userdata.password);
+    // if (widget.userdata.imageprof != null &&
+    //     widget.userdata.imageprof!.isNotEmpty) {
+    //   image = File(widget.userdata.imageprof!);
+    // }
   }
 
   @override
@@ -82,89 +83,89 @@ class _EditProfileState extends State<EditProfile> {
                 const SizedBox(
                   height: 25,
                 ),
-                Form(
-                  child: ValueListenableBuilder(
-                    valueListenable: dataListNotifier,
-                    builder: (BuildContext ctx, List<DataModel> dataList,
-                        Widget? child) {
-                      if (dataList.isEmpty) {
-                        return LinearProgressIndicator();
-                      }
-                      DataModel data = dataList.last;
-                      return Column(
-                        children: [
-                          TextFormField(
-                            controller: updateuname,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              hintText: data.uname,
-                              prefixIcon: const Icon(Icons.person),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          TextFormField(
-                            controller: updateemail,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              hintText: data.email,
-                              prefixIcon: const Icon(Icons.person),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          TextFormField(
-                            controller: updatepass,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              hintText: data.password,
-                              prefixIcon: const Icon(Icons.password),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          ElevatedButton(
-                            onPressed: () async {
-                              final uusername = updateuname.text;
-                              final uemail = updateemail.text;
-                              final upass = updatepass.text;
+          
+                  // child: ValueListenableBuilder(
+                  //   valueListenable: dataListNotifier,
+                  //   builder: (BuildContext ctx, List<DataModel> dataList,
+                  //       Widget? child) {
+                  //     if (dataList.isEmpty) {
+                  //       return LinearProgressIndicator();
+                  //     }
+                  //     DataModel data = dataList.last;
+                  //     return Column(
+                  //       children: [
+                  //         TextFormField(
+                  //           controller: updateuname,
+                  //           decoration: InputDecoration(
+                  //             border: OutlineInputBorder(
+                  //               borderRadius: BorderRadius.circular(10),
+                  //             ),
+                  //             hintText: data.uname,
+                  //             prefixIcon: const Icon(Icons.person),
+                  //           ),
+                  //         ),
+                  //         const SizedBox(
+                  //           height: 10,
+                  //         ),
+                  //         TextFormField(
+                  //           controller: updateemail,
+                  //           decoration: InputDecoration(
+                  //             border: OutlineInputBorder(
+                  //               borderRadius: BorderRadius.circular(10),
+                  //             ),
+                  //             hintText: data.email,
+                  //             prefixIcon: const Icon(Icons.person),
+                  //           ),
+                  //         ),
+                  //         const SizedBox(
+                  //           height: 10,
+                  //         ),
+                  //         TextFormField(
+                  //           controller: updatepass,
+                  //           decoration: InputDecoration(
+                  //             border: OutlineInputBorder(
+                  //               borderRadius: BorderRadius.circular(10),
+                  //             ),
+                  //             hintText: data.password,
+                  //             prefixIcon: const Icon(Icons.password),
+                  //           ),
+                  //         ),
+                  //         const SizedBox(
+                  //           height: 20,
+                  //         ),
+                  //         ElevatedButton(
+                  //           onPressed: () async {
+                  //             final uusername = updateuname.text;
+                  //             final uemail = updateemail.text;
+                  //             final upass = updatepass.text;
 
-                              if (widget.userdata.id != null) {
-                                final int id = widget.userdata.id!;
-                                final data1 = DataModel(
-                                  id: id,
-                                  uname: uusername,
-                                  email: uemail,
-                                  password: upass,
-                                  imageprof: image?.path ?? '',
-                                );
-                                await editData(id, data1);
-                                Navigator.pop(context);
-                              }
-                              ButtonStyle(
-                                  shadowColor: MaterialStatePropertyAll(
-                                      Color.fromRGBO(255, 13, 13, 0.984)));
-                            },
-                            child: const Text(
-                              'Update',
-                              style: TextStyle(
-                                  color: Color.fromRGBO(63, 63, 63, 0.984)),
-                            ),
-                          )
-                        ],
-                      );
-                    },
-                  ),
-                ),
+                  //             if (widget.userdata.id != null) {
+                  //               final int id = widget.userdata.id!;
+                  //               final data1 = DataModel(
+                  //                 id: id,
+                  //                 uname: uusername,
+                  //                 email: uemail,
+                  //                 password: upass,
+                  //                 imageprof: image?.path ?? '',
+                  //               );
+                  //               await editData(id, data1);
+                  //               Navigator.pop(context);
+                  //             }
+                  //             ButtonStyle(
+                  //                 shadowColor: MaterialStatePropertyAll(
+                  //                     Color.fromRGBO(255, 13, 13, 0.984)));
+                  //           },
+                  //           child: const Text(
+                  //             'Update',
+                  //             style: TextStyle(
+                  //                 color: Color.fromRGBO(63, 63, 63, 0.984)),
+                  //           ),
+                  //         )
+                  //       ],
+                  //     );
+                  //   },
+                  // ),
+            
               ],
             ),
           ),

@@ -5,17 +5,18 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:relm/admin/addBookAdmin.dart';
+
 import 'package:relm/user%20home%20screens/database/db.dart';
+
+import 'addBookAdmin.dart';
  
  
 
 
 class CatDetails extends StatefulWidget {
 
-  final Datamodelcat data;
 
-  const CatDetails({Key? key, required this.data,}) : super(key: key);
+  const CatDetails({Key? key,}) : super(key: key);
 
 
   @override
@@ -58,13 +59,13 @@ class _CatDetailsState extends State<CatDetails> {
               
                     height:200,
                     width: 280,
-                child: Image.file(File(widget.data.catimage)),
+                // child: Image.file(File(widget.data.catimage)),
                 ),
               
               ),
             ),
             SizedBox(height: 12,),
-          Text('Catgeory Name:'+widget.data.catname!,style: TextStyle(fontSize: 22,fontWeight:FontWeight.w700),),
+          // Text('Catgeory Name:'+widget.data.catname!,style: TextStyle(fontSize: 22,fontWeight:FontWeight.w700),),
 
           SizedBox(height: 16,),
           Text('List of Books in this Category',style: TextStyle(fontWeight: FontWeight.w700),),

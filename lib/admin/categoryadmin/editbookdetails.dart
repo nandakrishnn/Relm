@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -14,23 +13,26 @@ import 'package:relm/user%20home%20screens/database/firebasedb.dart';
 
 class EditBookDetails extends StatefulWidget {
   final DocumentSnapshot ds;
-  final String category1 ;
+  final String category1;
 
-  const EditBookDetails({Key? key, required this.ds, required this.category1}) : super(key: key);
+  const EditBookDetails({Key? key, required this.ds, required this.category1})
+      : super(key: key);
 
   @override
   State<EditBookDetails> createState() => _EditBookDetailsState();
 }
 
 class _EditBookDetailsState extends State<EditBookDetails> {
-
-  final TextEditingController bookDescriptionController = TextEditingController();
+  final TextEditingController bookDescriptionController =
+      TextEditingController();
   final TextEditingController bookNameController = TextEditingController();
   final TextEditingController bookAuthorController = TextEditingController();
-  final TextEditingController authorDescriptionController = TextEditingController();
+  final TextEditingController authorDescriptionController =
+      TextEditingController();
   final TextEditingController bookCategoryController = TextEditingController();
   final TextEditingController pdfNameController = TextEditingController();
   final TextEditingController audioNameController = TextEditingController();
+  final TextEditingController ratingController = TextEditingController();
   File? bookImage;
   File? authorImage;
   String? bookImageUrl;
@@ -50,9 +52,9 @@ class _EditBookDetailsState extends State<EditBookDetails> {
     authorImageUrl = widget.ds['ImageOfAuthor'];
     pdfFileUrl = widget.ds['PdfUrl'];
     audioFileUrl = widget.ds['AudioUrl'];
-  
+    ratingController.text = widget.ds['Bookrating'];
 
-    // Set initial values for PDF file and audio file names
+    
     final pdfFileName = pdfFileUrl?.split('/').last ?? '';
     pdfNameController.text = pdfFileName;
 
@@ -64,7 +66,8 @@ class _EditBookDetailsState extends State<EditBookDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('EDIT BOOK DETAILS', style: TextStyle(color: Colors.white)),
+        title: const Text('EDIT BOOK DETAILS',
+            style: TextStyle(color: Colors.white)),
         backgroundColor: const Color.fromRGBO(63, 63, 63, 2),
         centerTitle: true,
       ),
@@ -79,10 +82,10 @@ class _EditBookDetailsState extends State<EditBookDetails> {
         ),
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             child: Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 19,
                 ),
                 Form(
@@ -99,7 +102,7 @@ class _EditBookDetailsState extends State<EditBookDetails> {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 19,
                       ),
                       TextFormField(
@@ -114,7 +117,7 @@ class _EditBookDetailsState extends State<EditBookDetails> {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 19,
                       ),
                       TextFormField(
@@ -128,7 +131,7 @@ class _EditBookDetailsState extends State<EditBookDetails> {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 19,
                       ),
                       TextFormField(
@@ -143,7 +146,7 @@ class _EditBookDetailsState extends State<EditBookDetails> {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 19,
                       ),
                       TextFormField(
@@ -157,10 +160,24 @@ class _EditBookDetailsState extends State<EditBookDetails> {
                           ),
                         ),
                       ),
+                      const SizedBox(
+                        height: 19,
+                      ),
+                      TextFormField(
+                        controller: ratingController,
+                        decoration: InputDecoration(
+                          labelText: 'Book Rating',
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 19,
                 ),
                 TextFormField(
@@ -174,7 +191,7 @@ class _EditBookDetailsState extends State<EditBookDetails> {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 19,
                 ),
                 GestureDetector(
@@ -185,13 +202,13 @@ class _EditBookDetailsState extends State<EditBookDetails> {
                       height: 60,
                       width: MediaQuery.of(context).size.width,
                       color: Colors.amber,
-                      child: Center(
+                      child: const Center(
                         child: Text('CHOOSE YOUR PDF'),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 19,
                 ),
                 TextFormField(
@@ -205,7 +222,7 @@ class _EditBookDetailsState extends State<EditBookDetails> {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 19,
                 ),
                 GestureDetector(
@@ -216,13 +233,13 @@ class _EditBookDetailsState extends State<EditBookDetails> {
                       height: 60,
                       width: MediaQuery.of(context).size.width,
                       color: Colors.amber,
-                      child: Center(
+                      child: const Center(
                         child: Text('CHOOSE YOUR AUDIO'),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 19,
                 ),
                 GestureDetector(
@@ -234,12 +251,14 @@ class _EditBookDetailsState extends State<EditBookDetails> {
                       width: MediaQuery.of(context).size.width,
                       color: Colors.amber,
                       child: Center(
-                        child: bookImage != null ? Image.file(bookImage!) : Image.memory(base64Decode(bookImageUrl!)),
+                        child: bookImage != null
+                            ? Image.file(bookImage!)
+                            : Image.memory(base64Decode(bookImageUrl!)),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 19,
                 ),
                 GestureDetector(
@@ -251,25 +270,28 @@ class _EditBookDetailsState extends State<EditBookDetails> {
                       width: MediaQuery.of(context).size.width,
                       color: Colors.amber,
                       child: Center(
-                        child: authorImage != null ? Image.file(authorImage!) : Image.memory(base64Decode(authorImageUrl!)),
+                        child: authorImage != null
+                            ? Image.file(authorImage!)
+                            : Image.memory(base64Decode(authorImageUrl!)),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 19,
                 ),
                 ElevatedButton(
                   onPressed: () async {
                     await uploadFilesAndUpdateBook().then((value) {
-                      setState(() {
-                        
-                      });
+                      setState(() {});
                     });
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: ((context) => BookCategoryDetailsAdmin(category: widget.category1,))));
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: ((context) => BookCategoryDetailsAdmin(
+                              category: widget.category1,
+                            ))));
                     // Navigator.pop(context);
                   },
-                  child: Text('UPDATE'),
+                  child: const Text('UPDATE'),
                 ),
               ],
             ),
@@ -298,7 +320,8 @@ class _EditBookDetailsState extends State<EditBookDetails> {
   }
 
   Future<void> pickBookImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile == null) return;
     setState(() {
       bookImage = File(pickedFile.path);
@@ -306,59 +329,58 @@ class _EditBookDetailsState extends State<EditBookDetails> {
   }
 
   Future<void> pickAuthorImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile == null) return;
     setState(() {
       authorImage = File(pickedFile.path);
     });
   }
 
- Future<void> uploadFilesAndUpdateBook() async {
-  if (bookImage != null) {
-    final imageBytes = await bookImage!.readAsBytes();
-    bookImageUrl = base64Encode(imageBytes);
+  Future<void> uploadFilesAndUpdateBook() async {
+    if (bookImage != null) {
+      final imageBytes = await bookImage!.readAsBytes();
+      bookImageUrl = base64Encode(imageBytes);
+    }
+
+    if (authorImage != null) {
+      final imageBytes = await authorImage!.readAsBytes();
+      authorImageUrl = base64Encode(imageBytes);
+    }
+
+    if (pdfFileUrl != null && pdfFileUrl!.startsWith('file:')) {
+      final fileName = basename(pdfFileUrl!);
+      final destination = 'files/$fileName';
+      final ref = FirebaseStorage.instance.ref(destination);
+      await ref.putFile(File(pdfFileUrl!));
+      final downloadURL = await ref.getDownloadURL();
+      pdfFileUrl = downloadURL;
+    }
+
+    if (audioFileUrl != null && audioFileUrl!.startsWith('file:')) {
+      final fileName = basename(audioFileUrl!);
+      final destination = 'audio/$fileName';
+      final ref = FirebaseStorage.instance.ref(destination);
+      await ref.putFile(File(audioFileUrl!));
+      final downloadURL = await ref.getDownloadURL();
+      audioFileUrl = downloadURL;
+    }
+
+    final updateBookContent = {
+      'NameOfBook': bookNameController.text,
+      'ImageOfBook': bookImageUrl,
+      'BookDescription': bookDescriptionController.text,
+      'AuthorName': bookAuthorController.text,
+      'AuthorDescription': authorDescriptionController.text,
+      'ImageOfAuthor': authorImageUrl,
+      'PdfUrl': pdfFileUrl,
+      'CatgeoryName': bookCategoryController.text,
+      'AudioUrl': audioFileUrl,
+      'Bookrating': ratingController.text
+    };
+
+    await fireDatabase().updateBookDeatils(widget.ds.id, updateBookContent);
+
+    print('Book details updated successfully!');
   }
-
-  if (authorImage != null) {
-    final imageBytes = await authorImage!.readAsBytes();
-    authorImageUrl = base64Encode(imageBytes);
-  }
-
-  if (pdfFileUrl != null && pdfFileUrl!.startsWith('file:')) {
-    final fileName = basename(pdfFileUrl!);
-    final destination = 'files/$fileName';
-    final ref = FirebaseStorage.instance.ref(destination);
-    await ref.putFile(File(pdfFileUrl!));
-    final downloadURL = await ref.getDownloadURL();
-    pdfFileUrl = downloadURL;
-  }
-
-  if (audioFileUrl != null && audioFileUrl!.startsWith('file:')) {
-    final fileName = basename(audioFileUrl!);
-    final destination = 'audio/$fileName';
-    final ref = FirebaseStorage.instance.ref(destination);
-    await ref.putFile(File(audioFileUrl!));
-    final downloadURL = await ref.getDownloadURL();
-    audioFileUrl = downloadURL;
-  }
-
-  final updateBookContent = {
-    'NameOfBook': bookNameController.text,
-    'ImageOfBook': bookImageUrl,
-    'BookDescription': bookDescriptionController.text,
-    'AuthorName': bookAuthorController.text,
-    'AuthorDescription': authorDescriptionController.text,
-    'ImageOfAuthor': authorImageUrl,
-    'PdfUrl': pdfFileUrl,
-    'CatgeoryName': bookCategoryController.text,
-    'AudioUrl': audioFileUrl,
-  };
-
-  await fireDatabase().updateBookDeatils(widget.ds.id, updateBookContent);
-  
-  print('Book details updated successfully!');
-  
-
-}
-
 }
